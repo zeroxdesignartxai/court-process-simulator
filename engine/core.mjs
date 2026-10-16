@@ -7,8 +7,8 @@ export const STAGES = Object.freeze(["intake","pleadings","evidence","hearing","
 export const ROLES = Object.freeze(["judge","plaintiff","defendant","counsel_plaintiff","counsel_defendant","witness","clerk"]);
 const ACTIONS = Object.freeze({
   intake: {IDENTIFY_ISSUES:["judge","plaintiff","defendant","counsel_plaintiff","counsel_defendant","clerk","witness"]},
-  pleadings: {RECORD_POSITIONS:["judge","plaintiff","defendant","counsel_plaintiff","counsel_defendant","clerk"]},
-  evidence: {MARK_EXHIBIT:["judge","plaintiff","defendant","counsel_plaintiff","counsel_defendant","clerk"]},
+  pleadings: {RECORD_POSITIONS:ROLES},
+  evidence: {MARK_EXHIBIT:ROLES},
   hearing: {ASK_QUESTION:["judge","plaintiff","defendant","counsel_plaintiff","counsel_defendant"],ANSWER_QUESTION:["witness"],RECORD_HEARING:["clerk"]},
   conclusion: {SUMMARIZE_LEARNING:ROLES},
   closed: {}
