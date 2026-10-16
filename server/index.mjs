@@ -100,7 +100,7 @@ export function createServer(){
    const url=new URL(req.url||"/","http://localhost");
    if(url.pathname.startsWith("/api/"))return await api(req,res,url.pathname);
    if(req.method!=="GET")return send(res,405,{error:"Method not allowed"});
-   const asset=url.pathname==="/"?"prototype/index.html":url.pathname.startsWith("/prototype/")?url.pathname.slice(1):url.pathname.startsWith("/engine/")?"engine/core.mjs":null;
+   const asset=url.pathname==="/"?"prototype/index.html":url.pathname==="/workspace"?"server/client.html":url.pathname==="/server/client.js"?"server/client.js":url.pathname.startsWith("/prototype/")?url.pathname.slice(1):url.pathname==="/engine/core.mjs"?"engine/core.mjs":null;
    if(!asset||asset.includes("..")||![".html",".js",".css",".mjs"].includes(extname(asset)))return send(res,404,{error:"Not found"});
    const content=await readFile(resolve(root,asset));
    res.writeHead(200,{"Content-Type":mime[extname(asset)]||"text/javascript; charset=utf-8","X-Content-Type-Options":"nosniff","Cache-Control":"no-cache"});res.end(content);
