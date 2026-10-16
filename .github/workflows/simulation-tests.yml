@@ -15,9 +15,12 @@ jobs:
         with:
           node-version: '22'
       - name: Run deterministic simulation tests
-        run: node --test engine/core.test.mjs
+        run: node --test engine/core.test.mjs server/index.test.mjs
       - name: Syntax check
         run: |
           node --check engine/core.mjs
           node --check prototype/app.js
           node --check prototype/app-v2.js
+          node --check server/index.mjs
+          node --check server/client.js
+          node --check server/index.test.mjs
