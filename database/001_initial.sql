@@ -43,5 +43,13 @@ ALTER TABLE court_users ENABLE ROW LEVEL SECURITY;
 ALTER TABLE court_sessions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE court_cases ENABLE ROW LEVEL SECURITY;
 ALTER TABLE court_events ENABLE ROW LEVEL SECURITY;
-REVOKE ALL ON court_users,court_sessions,court_cases,court_events FROM PUBLIC,anon,authenticated;
+REVOKE ALL ON court_users,court_sessions,court_cases,court_events FROM PUBLIC;
+DO $ BEGIN
+ IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname='anon') THEN
+  EXECUTE 'REVOKE ALL ON court_users,court_sessions,court_cases,court_events FROM anon';
+ END IF;
+ IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname='authenticated') THEN
+  EXECUTE 'REVOKE ALL ON court_users,court_sessions,court_cases,court_events FROM authenticated';
+ END IF;
+END $;
 COMMIT;
