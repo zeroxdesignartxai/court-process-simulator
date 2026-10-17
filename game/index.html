@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Court Process Simulator | Playable Training</title>
+<style>
+:root{color-scheme:dark;font-family:Inter,ui-sans-serif,system-ui,Arial;background:#080f1b;color:#e9edf6}*{box-sizing:border-box}body{margin:0}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 22px;background:#101d30;border-bottom:1px solid #32465f}
+.brand{font-weight:850;letter-spacing:.12em}.brand small{display:block;font-size:10px;color:#b49a68;letter-spacing:.18em;margin-top:4px}.notice{font-size:11px;color:#c4d0df;border:1px solid #415775;padding:8px;border-radius:20px}
+.layout{display:grid;grid-template-columns:245px minmax(0,1fr);max-width:1440px;margin:auto}.side{padding:22px 17px;border-right:1px solid #2b3c51;background:#101a2b;min-height:92vh}
+label{font-size:11px;font-weight:bold;color:#d5b77f;letter-spacing:.1em;display:block;margin:14px 0 8px}
+select{background:#24354b;color:#fff;padding:11px;border-radius:8px;border:1px solid #586f89;width:100%;font:inherit}
+small,.muted{color:#9eafc3}.eyebrow{font-size:11px;color:#d5b77f;letter-spacing:.15em;font-weight:bold}#timeline{padding:0;list-style:none;display:grid;gap:7px}
+#timeline li{border:1px solid #2c3c52;border-radius:8px;padding:11px;font-size:12px;color:#9aaec6}
+#timeline .current{background:#3b3026;border-color:#d2aa6d;color:#fff0c5}#timeline .done{color:#79d5b0;border-color:#356758}
+aside button{display:block;width:100%;margin:8px 0}.asideinfo{font-size:12px;line-height:1.6;color:#acbad0;margin-top:25px}
+button{cursor:pointer;font:inherit}button:focus-visible,select:focus-visible{outline:3px solid #e4b65f;outline-offset:2px}
+.ghost{background:#1e3045;color:#eaf0f7;border:1px solid #4b627e;border-radius:7px;padding:10px}
+main{padding:18px;min-width:0}
+.status{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px;font-size:12px;color:#b6c9df}
+.arena{border:1px solid #465974;border-radius:14px;overflow:hidden;box-shadow:0 14px 45px #0008;background:#142236}
+.arena svg{width:100%;height:auto;display:block;max-height:430px}
+.dialogue{display:flex;gap:15px;padding:16px;background:#1b2c42;border-top:1px solid #4a607c;align-items:center}
+.portrait{background:#3a4c60;padding:13px;border-radius:9px;font-size:23px}.speaker{font-size:11px;letter-spacing:.1em;color:#f1c47e;font-weight:800}
+#speech{margin:6px 0 0;line-height:1.5;color:#e5ebf5}
+.columns{display:grid;grid-template-columns:1.3fr 1fr;gap:15px;margin-top:16px}
+.panel{background:#142238;border:1px solid #344963;border-radius:12px;padding:20px;min-width:0}
+.panel h1{font:700 clamp(22px,3vw,30px) Georgia,serif;margin:10px 0}
+#choices{display:grid;gap:9px}
+.choice{background:#243950;border:1px solid #496783;border-radius:9px;padding:13px;text-align:left;color:#eaf2fa;line-height:1.4}
+.choice:hover{background:#30516f;border-color:#d6b67c}
+.choice span{display:block;font-size:10px;font-weight:bold;color:#e8c17b;margin-bottom:5px}
+#result{line-height:1.5;color:#9de0c7;min-height:30px}
+.bars{display:grid;gap:12px;margin-top:16px}.barlabel{display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px}
+.track{height:9px;background:#334254;border-radius:10px;overflow:hidden}.fill{height:100%;background:#cfac73;transition:width .2s}
+#caseLog{padding-left:20px;max-height:230px;overflow:auto;font-size:12px;line-height:1.65;color:#a8bfd3}
+.exhibits{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}.exhibits button{background:#22364b;border:1px solid #566983;color:#e9f0f7;padding:10px;border-radius:7px}
+#evidenceText{font-size:12px;line-height:1.6;color:#b5c6d8;min-height:35px}
+footer{color:#8fa2bc;font-size:11px;text-align:center;padding:24px}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.side{min-height:0;border-right:0;border-bottom:1px solid #2b3c51}.columns{grid-template-columns:1fr}.notice{display:none}}
+</style></head><body>
+<header><div class="brand">⚖ COURT PROCESS SIMULATOR<small>THE COURTROOM EXPERIENCE</small></div><div class="notice">PLAYABLE TRAINING • SCRIPTED PARTICIPANTS • FICTIONAL CASE</div></header>
+<div class="layout"><aside class="side"><div class="eyebrow">PLAYER SETUP</div><label for="role">YOUR ROLE</label><select id="role"><option value="defendant">Defendant</option><option value="plaintiff">Plaintiff</option><option value="defense attorney">Defense Attorney</option><option value="plaintiff attorney">Plaintiff Attorney</option><option value="judge">Judge</option><option value="witness">Witness</option><option value="clerk">Court Clerk</option></select><label>COURT SESSION</label><ol id="timeline"></ol><button class="ghost" id="restart">↻ Restart hearing</button><button class="ghost" id="download">↓ Export practice record</button><div class="asideinfo"><strong>CASE BRIEF</strong><p>Rivera v. Parkside Services. Rivera alleges a $2,400 unpaid repair invoice. Parkside disputes satisfactory completion. Both parties may rely on a service agreement, an invoice, and witness observations.</p><strong>TRAINING NOTICE</strong><p>No verified jurisdiction-specific court rules, actual filings, AI judge, or predicted litigation outcomes are included.</p></div></aside>
+<main><div class="status"><span id="mission">MISSION 1 / 6</span><span id="roleInfo">DEFENDANT • COURT IN SESSION</span><span id="points">SKILL SCORE 0</span></div>
+<section class="arena"><svg viewBox="0 0 880 395" role="img" aria-label="Illustrated courtroom with a judge's bench and two opposing tables">
+<defs><linearGradient id="wall" x2="0" y2="1"><stop stop-color="#1b2f4d"/><stop offset="1" stop-color="#344d61"/></linearGradient><linearGradient id="floor" x2="0" y2="1"><stop stop-color="#56697c"/><stop offset="1" stop-color="#172739"/></linearGradient></defs>
+<rect width="880" height="395" fill="url(#wall)"/><path d="M0 275L440 215L880 275V395H0Z" fill="url(#floor)"/>
+<rect x="320" y="22" width="240" height="92" rx="8" fill="#142134" stroke="#ac8c5e" stroke-width="4"/>
+<text x="440" y="59" fill="#e8c38e" font-family="Georgia" font-size="26" text-anchor="middle">JUSTICE</text><text x="440" y="84" fill="#b8c7d9" font-size="13" text-anchor="middle">TRAINING COURT</text>
+<rect x="299" y="180" width="282" height="113" rx="8" fill="#77553b" stroke="#c3975c" stroke-width="5"/><rect x="318" y="175" width="244" height="19" fill="#b28855"/><circle cx="440" cy="142" r="29" fill="#d3a182"/><path d="M401 188Q409 155 440 155Q471 155 479 188Z" fill="#171f2d"/>
+<text x="440" y="248" fill="#eed3a6" font-size="20" text-anchor="middle">JUDGE</text>
+<rect x="75" y="282" width="240" height="95" rx="7" fill="#704e35" stroke="#c29761" stroke-width="5"/><circle cx="195" cy="245" r="29" fill="#cd997d"/><path d="M147 292Q156 258 195 258Q234 258 243 292Z" fill="#2b7092"/><text x="195" y="345" fill="#ffdda5" font-size="18" text-anchor="middle">PLAINTIFF</text>
+<rect x="563" y="282" width="240" height="95" rx="7" fill="#704e35" stroke="#c29761" stroke-width="5"/><circle cx="683" cy="245" r="29" fill="#c99a7a"/><path d="M635 292Q644 258 683 258Q722 258 731 292Z" fill="#585a8f"/><text x="683" y="345" fill="#ffdda5" font-size="18" text-anchor="middle">DEFENDANT</text>
+<path d="M407 330h66v55h-66z" fill="#835c40" stroke="#c39761" stroke-width="4"/><text x="440" y="360" font-size="12" fill="#fff0cc" text-anchor="middle">EXHIBITS</text>
+</svg><div class="dialogue"><div class="portrait">⚖</div><div><div class="speaker" id="speaker">COURT GUIDE</div><p id="speech"></p></div></div></section>
+<div class="columns"><section class="panel"><div class="eyebrow">CURRENT HEARING OBJECTIVE</div><h1 id="question"></h1><div id="choices"></div><p id="result" role="status"></p></section>
+<section class="panel"><div class="eyebrow">TRAINING PERFORMANCE</div><div class="bars"><div><div class="barlabel"><span>Evidence handling</span><b id="evidenceScore">0</b></div><div class="track"><div class="fill" id="evidenceBar"></div></div></div><div><div class="barlabel"><span>Fair procedure</span><b id="procedureScore">0</b></div><div class="track"><div class="fill" id="procedureBar"></div></div></div></div><div class="eyebrow" style="margin-top:22px">EVIDENCE LOCKER</div><div class="exhibits"><button id="agreement">Exhibit A: Agreement</button><button id="invoice">Exhibit B: Invoice</button><button id="witnessNote">Witness note</button></div><p id="evidenceText">Inspect the exhibits before making your decisions.</p><div class="eyebrow" style="margin-top:18px">COURT RECORD</div><ol id="caseLog"></ol></section></div></main></div><footer>Educational gameplay v0.1. Scripted opposition and rulings are not real legal advice. No genuine court participant or official judgment is simulated.</footer><script type="module" src="/game/sim.js"></script></body></html>
